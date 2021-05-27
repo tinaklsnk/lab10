@@ -1,12 +1,14 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Program {
     public static List<String> list = new ArrayList<>();
+
     public static void main(String[] args) throws IOException {
         MyHTMlParser parser = new MyHTMlParser();
         parser.findLinks();
@@ -16,7 +18,7 @@ public class Program {
 
 class MyHTMlParser {
     public void findLinks() throws IOException {
-        String code = readFileAsString("in.html");
+        String code = readFileAsString();
         Document html = Jsoup.parse(code);
         Elements elements = html.getElementsByAttribute("href");
         for (int i = 0; i < elements.size(); i++) {
@@ -35,15 +37,14 @@ class MyHTMlParser {
                 "<table border=\"1\">\n";
         for (int i = 0; i < Program.list.size(); i++) {
             html = html.concat("\t<tr>\n" +
-                    "\t\t<td>"+ (i + 1) + "</td>\n" +
-                    "\t\t<td>" + Program.list.get(i) +"</td>\n" +
+                    "\t\t<td>" + (i + 1) + "</td>\n" +
+                    "\t\t<td>" + Program.list.get(i) + "</td>\n" +
                     "\t</tr>\n");
         }
         html = html.concat("</table>\n" +
                 "</body>\n" +
                 "</html>");
-        try(FileWriter writer = new FileWriter("output.html", false))
-        {
+        try (FileWriter writer = new FileWriter("output.html", false)) {
             writer.write(html);
             writer.flush();
             System.out.println("Створено новий файл output.html");
@@ -52,13 +53,13 @@ class MyHTMlParser {
         }
     }
 
-    private String readFileAsString(String filePath) throws IOException {
-        StringBuffer fileData = new StringBuffer();
+    private String readFileAsString() throws IOException {
+        StringBuilder fileData = new StringBuilder();
         BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
+                new FileReader("in.html"));
         char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
+        int numRead;
+        while ((numRead = reader.read(buf)) != -1) {
             String readData = String.valueOf(buf, 0, numRead);
             fileData.append(readData);
         }
